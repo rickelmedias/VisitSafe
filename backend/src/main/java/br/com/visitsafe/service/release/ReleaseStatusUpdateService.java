@@ -25,7 +25,7 @@ public class ReleaseStatusUpdateService {
         Release release = releaseRepo.findById(releaseId)
                 .orElseThrow(() -> new IllegalArgumentException("Liberação não encontrada"));
 
-        release.setStatus(ReleaseStatusEnum.AUTHORIZED);
+        release.setStatus(ReleaseStatusEnum.CHECKED_IN);
         release.setCheckinAt(OffsetDateTime.now());
         release.setCheckinBy(employee);
 
@@ -37,7 +37,7 @@ public class ReleaseStatusUpdateService {
         Release release = releaseRepo.findById(releaseId)
                 .orElseThrow(() -> new IllegalArgumentException("Liberação não encontrada"));
 
-        release.setStatus(ReleaseStatusEnum.CHECKED_OUT);
+        release.setStatus(ReleaseStatusEnum.COMPLETED);
         release.setCheckoutAt(OffsetDateTime.now());
         release.setCheckoutBy(employee);
 

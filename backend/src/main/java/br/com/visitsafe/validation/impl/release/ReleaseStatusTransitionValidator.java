@@ -15,14 +15,13 @@ public class ReleaseStatusTransitionValidator implements Validator<ReleaseStatus
         ReleaseStatusEnum current = transition.release().getStatus();
         ReleaseStatusEnum target = transition.targetStatus();
 
-        if (target == UNAUTHORIZED && current != AUTHORIZED) {
+        if (target == UNAUTHORIZED && current != CHECKED_IN) {
             throw new ReleaseStatusTransitionException("Só é possível desautorizar uma liberação que já foi autorizada.");
         }
 
-        if (current == CHECKED_OUT || current == UNAUTHORIZED) {
+        if (current == COMPLETED || current == UNAUTHORIZED) {
             throw new ReleaseStatusTransitionException("Não é possível alterar uma liberação já finalizada.");
         }
-
     }
     
     public record Transition(Release release, ReleaseStatusEnum targetStatus) {}

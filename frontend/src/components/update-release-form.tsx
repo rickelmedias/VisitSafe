@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 import {
   existsByDocumentAndTypeQueryParamsTypeEnum as T,
   ExistsByDocumentAndTypeQueryParamsTypeEnum as Type,
@@ -26,16 +27,17 @@ interface Props {
   onSuccess: () => void
 }
 
-// Helper function to convert ISO string to local datetime-local format
-function isoToLocalDateTime(isoString: string): string {
+// Helper function to convert ISO string to local date format
+function isoToLocalDate(isoString: string): string {
   if (!isoString) return ''
+  // Create date in local timezone
   const date = new Date(isoString)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
+  // Adjust for timezone offset to get the correct local date
+  const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
+  const year = localDate.getFullYear()
+  const month = String(localDate.getMonth() + 1).padStart(2, '0')
+  const day = String(localDate.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 // Helper function to convert ISO string to local time format
@@ -47,26 +49,75 @@ function isoToLocalTime(isoString: string): string {
   return `${hours}:${minutes}`
 }
 
-// Helper function to convert local datetime to ISO with timezone
-function localDateTimeToIso(localDateTime: string): string {
-  if (!localDateTime) return ''
-  const date = new Date(localDateTime)
-  return date.toISOString()
+// Helper function to convert time string to HH:mm format
+function formatTime(timeStr: string): string {
+  if (!timeStr) return ''
+  // If the time is already in HH:mm format, return it
+  if (timeStr.length === 5) return timeStr
+  // If the time is in HH:mm:ss format, remove the seconds
+  if (timeStr.length === 8) return timeStr.substring(0, 5)
+  // If the time is in ISO format, convert it
+  try {
+    const date = new Date(timeStr)
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${hours}:${minutes}`
+  } catch {
+    return ''
+  }
+}
+
+// Helper function to convert time string to LocalTime format expected by Spring Boot
+function formatTimeForBackend(timeStr: string): string {
+  if (!timeStr) return ''
+  // Spring Boot expects LocalTime in format "HH:mm:ss"
+  return timeStr.length === 5 ? `${timeStr}:00` : timeStr
+}
+
+// Helper function to convert local date to ISO
+function localDateToIso(localDate: string): string {
+  if (!localDate) return ''
+  // Return date in YYYY-MM-DD format
+  return localDate
+}
+
+// Helper function to create LocalTime object from time input
+function createLocalTime(timeStr: string): { hour: number; minute: number; second: number; nano: number } {
+  if (!timeStr) return { hour: 0, minute: 0, second: 0, nano: 0 }
+  const [hours, minutes] = timeStr.split(':').map(Number)
+  return {
+    hour: hours,
+    minute: minutes,
+    second: 0,
+    nano: 0
+  }
+}
+
+// Helper function to create LocalDate string from date input
+function createLocalDate(dateStr: string): string {
+  if (!dateStr) return ''
+  return dateStr
 }
 
 // Helper function to create ISO datetime from date and time
 function createIsoFromDateAndTime(dateStr: string, timeStr: string): string {
   if (!dateStr || !timeStr) return ''
+  // Create date in local timezone
   const date = new Date(`${dateStr}T${timeStr}:00`)
-  return date.toISOString()
+  // Adjust for timezone offset to get the correct UTC date
+  const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+  return utcDate.toISOString()
 }
 
 export default function UpdateReleaseForm({ release, propertyId, onSuccess }: Props) {
-  // Initialize state with properly converted values from ISO strings
-  const [validFrom, setValidFrom] = useState(isoToLocalDateTime(release.validFrom))
-  const [validUntil, setValidUntil] = useState(isoToLocalDateTime(release.validUntil))
-  const [dailyStart, setDailyStart] = useState(isoToLocalTime(release.dailyStart))
-  const [dailyEnd, setDailyEnd] = useState(isoToLocalTime(release.dailyEnd))
+  // Initialize state with properly converted values
+  const [validFrom, setValidFrom] = useState(isoToLocalDate(release.validFrom))
+  const [validUntil, setValidUntil] = useState(isoToLocalDate(release.validUntil))
+  const [dailyStart, setDailyStart] = useState(formatTime(release.dailyStart))
+  const [dailyEnd, setDailyEnd] = useState(formatTime(release.dailyEnd))
+
+  console.log('Initial dailyStart:', release.dailyStart, 'Formatted:', formatTime(release.dailyStart))
+  console.log('Initial dailyEnd:', release.dailyEnd, 'Formatted:', formatTime(release.dailyEnd))
 
   const type: Type = release.releaseType
 
@@ -107,22 +158,25 @@ export default function UpdateReleaseForm({ release, propertyId, onSuccess }: Pr
   const handleSave = () => {
     if (!isValid()) return
 
-    // Extract the date part from validFrom for daily times
-    const datePart = validFrom.split('T')[0]
-    
     const payload = {
       unitId: propertyId,
-      validFrom: localDateTimeToIso(validFrom),
-      validUntil: localDateTimeToIso(validUntil),
-      dailyStart: createIsoFromDateAndTime(datePart, dailyStart),
-      dailyEnd: createIsoFromDateAndTime(datePart, dailyEnd),
+      validFrom: validFrom, // Send as string in YYYY-MM-DD format
+      validUntil: validUntil, // Send as string in YYYY-MM-DD format
+      dailyStart: formatTimeForBackend(dailyStart), // Send as string in HH:mm:ss format
+      dailyEnd: formatTimeForBackend(dailyEnd), // Send as string in HH:mm:ss format
     }
 
     console.log('Payload being sent:', payload) // Debug log
 
     updateMutation.mutate({
       id: release.id,
-      data: payload
+      data: {
+        unitId: propertyId,
+        validFrom: localDateToIso(validFrom),
+        validUntil: localDateToIso(validUntil),
+        dailyStart: createLocalTime(dailyStart),
+        dailyEnd: createLocalTime(dailyEnd)
+      }
     })
   }
 
@@ -135,18 +189,55 @@ export default function UpdateReleaseForm({ release, propertyId, onSuccess }: Pr
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Editar horários da liberação ({type})</h2>
+      <p className="text-sm text-muted-foreground">
+        Atualize os horários de início e fim da liberação, bem como os horários diários permitidos.
+      </p>
 
-      <label className="text-sm font-medium">Início da liberação</label>
-      <Input type="datetime-local" value={validFrom} onChange={(e) => setValidFrom(e.target.value)} />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="validFrom">Início da liberação</Label>
+          <Input
+            id="validFrom"
+            type="date"
+            value={validFrom}
+            onChange={(e) => setValidFrom(e.target.value)}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="validUntil">Fim da liberação</Label>
+          <Input
+            id="validUntil"
+            type="date"
+            value={validUntil}
+            onChange={(e) => setValidUntil(e.target.value)}
+            required
+          />
+        </div>
+      </div>
 
-      <label className="text-sm font-medium">Fim da liberação</label>
-      <Input type="datetime-local" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} />
-
-      <label className="text-sm font-medium">Horário diário de entrada</label>
-      <Input type="time" value={dailyStart} onChange={(e) => setDailyStart(e.target.value)} />
-
-      <label className="text-sm font-medium">Horário diário de saída</label>
-      <Input type="time" value={dailyEnd} onChange={(e) => setDailyEnd(e.target.value)} />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="dailyStart">Horário diário de entrada</Label>
+          <Input
+            id="dailyStart"
+            type="time"
+            value={dailyStart}
+            onChange={(e) => setDailyStart(e.target.value)}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="dailyEnd">Horário diário de saída</Label>
+          <Input
+            id="dailyEnd"
+            type="time"
+            value={dailyEnd}
+            onChange={(e) => setDailyEnd(e.target.value)}
+            required
+          />
+        </div>
+      </div>
 
       {type === T.SERVICEPROVIDER && (
         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
@@ -159,18 +250,21 @@ export default function UpdateReleaseForm({ release, propertyId, onSuccess }: Pr
         </div>
       )}
 
-      <div className="space-y-2">
-        <Button className="w-full mt-4" onClick={handleSave} disabled={!isValid()}>
-          Salvar alterações
-        </Button>
-
-        <Button
-          variant="destructive"
-          className="w-full"
+      <div className="flex justify-between">
+        <Button 
+          variant="destructive" 
           onClick={handleDelete}
         >
-          Excluir Liberação
+          Remover Liberação
         </Button>
+        <div className="space-x-2">
+          <Button variant="outline" onClick={onSuccess}>
+            Cancelar
+          </Button>
+          <Button onClick={handleSave} disabled={!isValid()}>
+            Salvar Alterações
+          </Button>
+        </div>
       </div>
 
       {/* Debug section - remove in production */}

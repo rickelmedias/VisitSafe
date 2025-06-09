@@ -10,6 +10,20 @@ export type { AddressDTO } from './AddressDTO.ts'
 export type { AdminUserCreateRequestDTODocumentTypeEnum, AdminUserCreateRequestDTO } from './AdminUserCreateRequestDTO.ts'
 export type { AdminUserResponseDTO } from './AdminUserResponseDTO.ts'
 export type {
+  ApproveLateExit1PathParams,
+  ApproveLateExit1QueryParams,
+  ApproveLateExit1200,
+  ApproveLateExit1MutationResponse,
+  ApproveLateExit1Mutation,
+} from './ApproveLateExit1.ts'
+export type {
+  ApproveLateExitPathParams,
+  ApproveLateExitQueryParams,
+  ApproveLateExit200,
+  ApproveLateExitMutationResponse,
+  ApproveLateExitMutation,
+} from './ApproveLateExit.ts'
+export type {
   ApproveServiceProviderReleasePathParams,
   ApproveServiceProviderReleaseQueryParams,
   ApproveServiceProviderRelease200,
@@ -159,6 +173,12 @@ export type {
   GetAllCheckedOutTodayQuery,
 } from './GetAllCheckedOutToday.ts'
 export type { GetAllPendingTodayQueryParams, GetAllPendingToday200, GetAllPendingTodayQueryResponse, GetAllPendingTodayQuery } from './GetAllPendingToday.ts'
+export type {
+  GetServiceProviderReleasePathParams,
+  GetServiceProviderRelease200,
+  GetServiceProviderReleaseQueryResponse,
+  GetServiceProviderReleaseQuery,
+} from './GetServiceProviderRelease.ts'
 export type { GuestReleaseCreateRequestDTO } from './GuestReleaseCreateRequestDTO.ts'
 export type { GuestReleaseUpdateRequestDTO } from './GuestReleaseUpdateRequestDTO.ts'
 export type { GuestVisitorDTO } from './GuestVisitorDTO.ts'
@@ -182,10 +202,17 @@ export type {
   ListMyReleasesByPeriodQuery,
 } from './ListMyReleasesByPeriod.ts'
 export type { ListMyUnits200, ListMyUnitsQueryResponse, ListMyUnitsQuery } from './ListMyUnits.ts'
+export type { LocalTime } from './LocalTime.ts'
 export type { Login200, LoginMutationRequest, LoginMutationResponse, LoginMutation } from './Login.ts'
+export type { NotifyResident1PathParams, NotifyResident1200, NotifyResident1MutationResponse, NotifyResident1Mutation } from './NotifyResident1.ts'
+export type { NotifyResidentPathParams, NotifyResident200, NotifyResidentMutationResponse, NotifyResidentMutation } from './NotifyResident.ts'
 export type { PageableObject } from './PageableObject.ts'
 export type { PageReleaseSummaryResponseDTO } from './PageReleaseSummaryResponseDTO.ts'
 export type { PageUnitResponseDTO } from './PageUnitResponseDTO.ts'
+export type { RecordEntry1PathParams, RecordEntry1200, RecordEntry1MutationResponse, RecordEntry1Mutation } from './RecordEntry1.ts'
+export type { RecordEntryPathParams, RecordEntry200, RecordEntryMutationResponse, RecordEntryMutation } from './RecordEntry.ts'
+export type { RecordExit1PathParams, RecordExit1200, RecordExit1MutationRequest, RecordExit1MutationResponse, RecordExit1Mutation } from './RecordExit1.ts'
+export type { RecordExitPathParams, RecordExit200, RecordExitMutationResponse, RecordExitMutation } from './RecordExit.ts'
 export type { ReleaseResponseDTOReleaseTypeEnum, ReleaseResponseDTO } from './ReleaseResponseDTO.ts'
 export type { ReleaseSummaryResponseDTOStatusEnum, ReleaseSummaryResponseDTO } from './ReleaseSummaryResponseDTO.ts'
 export type { ResidentialCondominiumCreateRequestDTO } from './ResidentialCondominiumCreateRequestDTO.ts'
@@ -194,6 +221,7 @@ export type { ResidentialOwnerUserCreateRequestDTODocumentTypeEnum, ResidentialO
 export type { ResidentialOwnerUserResponseDTO } from './ResidentialOwnerUserResponseDTO.ts'
 export type { ResidentialUnit } from './ResidentialUnit.ts'
 export type { ServiceProviderReleaseCreateRequestDTO } from './ServiceProviderReleaseCreateRequestDTO.ts'
+export type { ServiceProviderReleaseJustificationDTO } from './ServiceProviderReleaseJustificationDTO.ts'
 export type { ServiceProviderReleaseUpdateRequestDTO } from './ServiceProviderReleaseUpdateRequestDTO.ts'
 export type { ServiceProviderVisitorDTO } from './ServiceProviderVisitorDTO.ts'
 export type { SortObject } from './SortObject.ts'

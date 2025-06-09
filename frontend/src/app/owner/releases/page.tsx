@@ -15,7 +15,6 @@ import { Plus, Trash2 } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import ReleaseStepForm from '@/components/release-form'
 import UpdateReleaseForm from '@/components/update-release-form'
-import LateExitForm from '@/components/late-exit-form'
 import LateExitApproval from '@/components/late-exit-approval'
 import LateExitNotification from '@/components/late-exit-notification'
 
@@ -495,24 +494,10 @@ export default function OwnerReleasesPage() {
     const release = event.release
     setSelectedRelease(release)
 
-    if (isClient && release.releaseType === 'SERVICEPROVIDER') {
-      // Parse the dailyEnd time without timezone adjustment
-      const [hours, minutes] = release.dailyEnd.split(':')
-      const dailyEnd = new Date()
-      dailyEnd.setHours(parseInt(hours), parseInt(minutes), 0, 0)
-      
-      // Get current time in the same timezone
-      const currentTime = new Date()
-      currentTime.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0)
+    // Check if the release has been checked in
+    const canBeRemoved = release.status === 'PENDING' // Only allow removal if status is PENDING (not checked in yet)
 
-      // Compare times directly without timezone adjustments
-      if (currentTime > dailyEnd) {
-        // If it's a late exit, show the late exit form
-        setIsLateExitModalOpen(true)
-        return // Prevent opening the regular checkout dialog
-      }
-    }
-
+    // Show the edit modal with the release data
     setIsEditReleaseModalOpen(true)
   }
 
@@ -527,9 +512,18 @@ export default function OwnerReleasesPage() {
     const startDate = new Date(release.validFrom);
     const endDate = new Date(release.validUntil);
     
-    // Adjust for timezone offset
-    const start = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000);
-    const end = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000);
+    // Create dates in local timezone
+    const start = new Date(startDate.getTime() + startDate.getTimezoneOffset() * 60000);
+    // For end date, we need to add one day to show it on the calendar
+    const end = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000 + 24 * 60 * 60 * 1000);
+    
+    console.log('Release dates:', {
+      id: release.id,
+      originalStart: release.validFrom,
+      originalEnd: release.validUntil,
+      adjustedStart: start.toISOString(),
+      adjustedEnd: end.toISOString()
+    });
     
     return {
       id: release.id,
@@ -651,7 +645,7 @@ export default function OwnerReleasesPage() {
             <DialogHeader>
               <DialogTitle>Saída Tardia</DialogTitle>
             </DialogHeader>
-            <LateExitForm release={selectedRelease} onSuccess={handleSuccess} onCancel={() => setIsLateExitModalOpen(false)} />
+            <LateExitApproval release={selectedRelease} onSuccess={handleSuccess} onCancel={() => setIsLateExitModalOpen(false)} />
           </DialogContent>
         </Dialog>
       )}

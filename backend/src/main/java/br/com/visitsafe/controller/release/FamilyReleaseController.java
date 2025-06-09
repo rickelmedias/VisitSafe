@@ -30,6 +30,8 @@ public class FamilyReleaseController {
             familyRelease.getId(),
             familyRelease.getValidFrom(),
             familyRelease.getValidUntil(),
+            familyRelease.getDailyStart(),
+            familyRelease.getDailyEnd(),
             ReleaseTypeEnum.FAMILY
         );
     }
@@ -39,7 +41,14 @@ public class FamilyReleaseController {
     public ReleaseResponseDTO updateFamilyRelease(@PathVariable UUID id,
                                      @RequestBody FamilyReleaseUpdateRequestDTO dto) {
         FamilyRelease updatedFamilyRelease = updateService.update(id, dto);
-        return new ReleaseResponseDTO(updatedFamilyRelease.getId(), updatedFamilyRelease.getValidFrom(), updatedFamilyRelease.getValidUntil(), ReleaseTypeEnum.FAMILY);
+        return new ReleaseResponseDTO(
+            updatedFamilyRelease.getId(),
+            updatedFamilyRelease.getValidFrom(),
+            updatedFamilyRelease.getValidUntil(),
+            updatedFamilyRelease.getDailyStart(),
+            updatedFamilyRelease.getDailyEnd(),
+            ReleaseTypeEnum.FAMILY
+        );
     }
 
     @DeleteMapping("/{id}")

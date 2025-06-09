@@ -30,6 +30,8 @@ public class DeliveryReleaseController {
             deliveryRelease.getId(),
             deliveryRelease.getValidFrom(),
             deliveryRelease.getValidUntil(),
+            deliveryRelease.getDailyStart(),
+            deliveryRelease.getDailyEnd(),
             ReleaseTypeEnum.DELIVERY
         );
     }
@@ -39,7 +41,14 @@ public class DeliveryReleaseController {
     public ReleaseResponseDTO updateDeliveryRelease(@PathVariable UUID id,
                                      @RequestBody DeliveryReleaseUpdateRequestDTO dto) {
         DeliveryRelease updatDeliveryRelease = updateService.update(id, dto);
-        return new ReleaseResponseDTO(updatDeliveryRelease.getId(), updatDeliveryRelease.getValidFrom(), updatDeliveryRelease.getValidUntil(), ReleaseTypeEnum.DELIVERY);
+        return new ReleaseResponseDTO(
+            updatDeliveryRelease.getId(),
+            updatDeliveryRelease.getValidFrom(),
+            updatDeliveryRelease.getValidUntil(),
+            updatDeliveryRelease.getDailyStart(),
+            updatDeliveryRelease.getDailyEnd(),
+            ReleaseTypeEnum.DELIVERY
+        );
     }
 
     @DeleteMapping("/{id}")

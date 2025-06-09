@@ -1,3 +1,5 @@
+import type { LocalTime } from './LocalTime.ts'
+
 export type FamilyReleaseUpdateRequestDTO = {
   /**
    * @description ID da unidade
@@ -5,23 +7,21 @@ export type FamilyReleaseUpdateRequestDTO = {
    */
   unitId: string
   /**
-   * @description Início da liberação
-   * @type string, date-time
+   * @description Data inicial da liberação
+   * @type string, date
    */
   validFrom: string
   /**
-   * @description Fim da liberação
-   * @type string, date-time
+   * @description Data final da liberação
+   * @type string, date
    */
   validUntil: string
   /**
-   * @description Horário de entrada permitido por dia
-   * @type string, date-time
+   * @type object
    */
-  dailyStart: string
+  dailyStart: LocalTime
   /**
-   * @description Horário de saída permitido por dia
-   * @type string, date-time
+   * @type object
    */
-  dailyEnd: string
+  dailyEnd: LocalTime
 }

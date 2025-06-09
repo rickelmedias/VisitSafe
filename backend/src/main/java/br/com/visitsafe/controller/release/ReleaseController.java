@@ -101,7 +101,7 @@ public class ReleaseController {
     ) {
         EmployeeUser employee = (EmployeeUser) userQueryService.findByEmail(userDetails.getUsername());
         return releaseReadService.findAllTodayByCondominiumAndStatus(
-                employee, ReleaseStatusEnum.AUTHORIZED, PageRequest.of(page, size)
+                employee, ReleaseStatusEnum.CHECKED_IN, PageRequest.of(page, size)
         );
     }
 
@@ -115,7 +115,7 @@ public class ReleaseController {
     ) {
         EmployeeUser employee = (EmployeeUser) userQueryService.findByEmail(userDetails.getUsername());
         return releaseReadService.findAllTodayByCondominiumAndStatus(
-                employee, ReleaseStatusEnum.CHECKED_OUT, PageRequest.of(page, size)
+                employee, ReleaseStatusEnum.COMPLETED, PageRequest.of(page, size)
         );
     }
 

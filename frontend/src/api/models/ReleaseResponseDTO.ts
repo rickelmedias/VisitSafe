@@ -1,3 +1,5 @@
+import type { LocalTime } from './LocalTime.ts'
+
 export const releaseResponseDTOReleaseTypeEnum = {
   GUEST: 'GUEST',
   FAMILY: 'FAMILY',
@@ -14,13 +16,21 @@ export type ReleaseResponseDTO = {
    */
   id?: string
   /**
-   * @type string | undefined, date-time
+   * @type string | undefined, date
    */
   validFrom?: string
   /**
-   * @type string | undefined, date-time
+   * @type string | undefined, date
    */
   validUntil?: string
+  /**
+   * @type object | undefined
+   */
+  dailyStart?: LocalTime
+  /**
+   * @type object | undefined
+   */
+  dailyEnd?: LocalTime
   /**
    * @description Tipos de liberação
    * @type string | undefined

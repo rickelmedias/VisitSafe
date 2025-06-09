@@ -2,7 +2,9 @@ package br.com.visitsafe.model.enums;
 
 public enum ReleaseStatusEnum {
     PENDING_CHECKIN,
-    AUTHORIZED,
-    CHECKED_OUT,
+    CHECKED_IN,
+    PENDING_RESIDENT_APPROVAL,
+    COMPLETED,
+    REJECTED,
     UNAUTHORIZED
 }

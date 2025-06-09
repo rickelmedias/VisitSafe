@@ -30,6 +30,8 @@ public class DriverReleaseController {
             driverRelease.getId(),
             driverRelease.getValidFrom(),
             driverRelease.getValidUntil(),
+            driverRelease.getDailyStart(),
+            driverRelease.getDailyEnd(),
             ReleaseTypeEnum.DRIVER
         );
     }
@@ -39,7 +41,14 @@ public class DriverReleaseController {
     public ReleaseResponseDTO updateDriverRelease(@PathVariable UUID id,
                                      @RequestBody DriverReleaseUpdateRequestDTO dto) {
         DriverRelease updatedDriverRelease = updateService.update(id, dto);
-        return new ReleaseResponseDTO(updatedDriverRelease.getId(), updatedDriverRelease.getValidFrom(), updatedDriverRelease.getValidUntil(), ReleaseTypeEnum.DRIVER);
+        return new ReleaseResponseDTO(
+            updatedDriverRelease.getId(),
+            updatedDriverRelease.getValidFrom(),
+            updatedDriverRelease.getValidUntil(),
+            updatedDriverRelease.getDailyStart(),
+            updatedDriverRelease.getDailyEnd(),
+            ReleaseTypeEnum.DRIVER
+        );
     }
 
     @DeleteMapping("/{id}")

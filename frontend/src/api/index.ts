@@ -1,4 +1,6 @@
 export type { ActivateUnitAssociationCodeMutationKey } from './hooks/useActivateUnitAssociationCode.ts'
+export type { ApproveLateExit1MutationKey } from './hooks/useApproveLateExit1.ts'
+export type { ApproveLateExitMutationKey } from './hooks/useApproveLateExit.ts'
 export type { ApproveServiceProviderReleaseMutationKey } from './hooks/useApproveServiceProviderRelease.ts'
 export type { CancelReleaseMutationKey } from './hooks/useCancelRelease.ts'
 export type { CheckinReleaseMutationKey } from './hooks/useCheckinRelease.ts'
@@ -33,6 +35,8 @@ export type { GetAllCheckedOutTodayQueryKey } from './hooks/useGetAllCheckedOutT
 export type { GetAllCheckedOutTodaySuspenseQueryKey } from './hooks/useGetAllCheckedOutTodaySuspense.ts'
 export type { GetAllPendingTodayQueryKey } from './hooks/useGetAllPendingToday.ts'
 export type { GetAllPendingTodaySuspenseQueryKey } from './hooks/useGetAllPendingTodaySuspense.ts'
+export type { GetServiceProviderReleaseQueryKey } from './hooks/useGetServiceProviderRelease.ts'
+export type { GetServiceProviderReleaseSuspenseQueryKey } from './hooks/useGetServiceProviderReleaseSuspense.ts'
 export type { JustifyServiceProviderReleaseMutationKey } from './hooks/useJustifyServiceProviderRelease.ts'
 export type { ListAllUnitsFromMyCondominiumQueryKey } from './hooks/useListAllUnitsFromMyCondominium.ts'
 export type { ListAllUnitsFromMyCondominiumSuspenseQueryKey } from './hooks/useListAllUnitsFromMyCondominiumSuspense.ts'
@@ -41,6 +45,12 @@ export type { ListMyReleasesByPeriodSuspenseQueryKey } from './hooks/useListMyRe
 export type { ListMyUnitsQueryKey } from './hooks/useListMyUnits.ts'
 export type { ListMyUnitsSuspenseQueryKey } from './hooks/useListMyUnitsSuspense.ts'
 export type { LoginMutationKey } from './hooks/useLogin.ts'
+export type { NotifyResident1MutationKey } from './hooks/useNotifyResident1.ts'
+export type { NotifyResidentMutationKey } from './hooks/useNotifyResident.ts'
+export type { RecordEntry1MutationKey } from './hooks/useRecordEntry1.ts'
+export type { RecordEntryMutationKey } from './hooks/useRecordEntry.ts'
+export type { RecordExit1MutationKey } from './hooks/useRecordExit1.ts'
+export type { RecordExitMutationKey } from './hooks/useRecordExit.ts'
 export type { UpdateDeliveryReleaseMutationKey } from './hooks/useUpdateDeliveryRelease.ts'
 export type { UpdateDriverReleaseMutationKey } from './hooks/useUpdateDriverRelease.ts'
 export type { UpdateFamilyReleaseMutationKey } from './hooks/useUpdateFamilyRelease.ts'
@@ -59,6 +69,20 @@ export type { Address } from './models/Address.ts'
 export type { AddressDTO } from './models/AddressDTO.ts'
 export type { AdminUserCreateRequestDTODocumentTypeEnum, AdminUserCreateRequestDTO } from './models/AdminUserCreateRequestDTO.ts'
 export type { AdminUserResponseDTO } from './models/AdminUserResponseDTO.ts'
+export type {
+  ApproveLateExit1PathParams,
+  ApproveLateExit1QueryParams,
+  ApproveLateExit1200,
+  ApproveLateExit1MutationResponse,
+  ApproveLateExit1Mutation,
+} from './models/ApproveLateExit1.ts'
+export type {
+  ApproveLateExitPathParams,
+  ApproveLateExitQueryParams,
+  ApproveLateExit200,
+  ApproveLateExitMutationResponse,
+  ApproveLateExitMutation,
+} from './models/ApproveLateExit.ts'
 export type {
   ApproveServiceProviderReleasePathParams,
   ApproveServiceProviderReleaseQueryParams,
@@ -214,6 +238,12 @@ export type {
   GetAllPendingTodayQueryResponse,
   GetAllPendingTodayQuery,
 } from './models/GetAllPendingToday.ts'
+export type {
+  GetServiceProviderReleasePathParams,
+  GetServiceProviderRelease200,
+  GetServiceProviderReleaseQueryResponse,
+  GetServiceProviderReleaseQuery,
+} from './models/GetServiceProviderRelease.ts'
 export type { GuestReleaseCreateRequestDTO } from './models/GuestReleaseCreateRequestDTO.ts'
 export type { GuestReleaseUpdateRequestDTO } from './models/GuestReleaseUpdateRequestDTO.ts'
 export type { GuestVisitorDTO } from './models/GuestVisitorDTO.ts'
@@ -237,10 +267,23 @@ export type {
   ListMyReleasesByPeriodQuery,
 } from './models/ListMyReleasesByPeriod.ts'
 export type { ListMyUnits200, ListMyUnitsQueryResponse, ListMyUnitsQuery } from './models/ListMyUnits.ts'
+export type { LocalTime } from './models/LocalTime.ts'
 export type { Login200, LoginMutationRequest, LoginMutationResponse, LoginMutation } from './models/Login.ts'
+export type { NotifyResident1PathParams, NotifyResident1200, NotifyResident1MutationResponse, NotifyResident1Mutation } from './models/NotifyResident1.ts'
+export type { NotifyResidentPathParams, NotifyResident200, NotifyResidentMutationResponse, NotifyResidentMutation } from './models/NotifyResident.ts'
 export type { PageableObject } from './models/PageableObject.ts'
 export type { PageReleaseSummaryResponseDTO } from './models/PageReleaseSummaryResponseDTO.ts'
 export type { PageUnitResponseDTO } from './models/PageUnitResponseDTO.ts'
+export type { RecordEntry1PathParams, RecordEntry1200, RecordEntry1MutationResponse, RecordEntry1Mutation } from './models/RecordEntry1.ts'
+export type { RecordEntryPathParams, RecordEntry200, RecordEntryMutationResponse, RecordEntryMutation } from './models/RecordEntry.ts'
+export type {
+  RecordExit1PathParams,
+  RecordExit1200,
+  RecordExit1MutationRequest,
+  RecordExit1MutationResponse,
+  RecordExit1Mutation,
+} from './models/RecordExit1.ts'
+export type { RecordExitPathParams, RecordExit200, RecordExitMutationResponse, RecordExitMutation } from './models/RecordExit.ts'
 export type { ReleaseResponseDTOReleaseTypeEnum, ReleaseResponseDTO } from './models/ReleaseResponseDTO.ts'
 export type { ReleaseSummaryResponseDTOStatusEnum, ReleaseSummaryResponseDTO } from './models/ReleaseSummaryResponseDTO.ts'
 export type { ResidentialCondominiumCreateRequestDTO } from './models/ResidentialCondominiumCreateRequestDTO.ts'
@@ -252,6 +295,7 @@ export type {
 export type { ResidentialOwnerUserResponseDTO } from './models/ResidentialOwnerUserResponseDTO.ts'
 export type { ResidentialUnit } from './models/ResidentialUnit.ts'
 export type { ServiceProviderReleaseCreateRequestDTO } from './models/ServiceProviderReleaseCreateRequestDTO.ts'
+export type { ServiceProviderReleaseJustificationDTO } from './models/ServiceProviderReleaseJustificationDTO.ts'
 export type { ServiceProviderReleaseUpdateRequestDTO } from './models/ServiceProviderReleaseUpdateRequestDTO.ts'
 export type { ServiceProviderVisitorDTO } from './models/ServiceProviderVisitorDTO.ts'
 export type { SortObject } from './models/SortObject.ts'
@@ -304,6 +348,8 @@ export type { UserUpdateResponseDTO } from './models/UserUpdateResponseDTO.ts'
 export type { Vehicle } from './models/Vehicle.ts'
 export type { VisitorExistsResponseDTO } from './models/VisitorExistsResponseDTO.ts'
 export { getActivateUnitAssociationCodeUrl, activateUnitAssociationCode } from './client/activateUnitAssociationCode.ts'
+export { getApproveLateExit1Url, approveLateExit1 } from './client/approveLateExit1.ts'
+export { getApproveLateExitUrl, approveLateExit } from './client/approveLateExit.ts'
 export { getApproveServiceProviderReleaseUrl, approveServiceProviderRelease } from './client/approveServiceProviderRelease.ts'
 export { getCancelReleaseUrl, cancelRelease } from './client/cancelRelease.ts'
 export { getCheckinReleaseUrl, checkinRelease } from './client/checkinRelease.ts'
@@ -332,11 +378,18 @@ export { getGetAllCanceledTodayUrl, getAllCanceledToday } from './client/getAllC
 export { getGetAllCheckedInTodayUrl, getAllCheckedInToday } from './client/getAllCheckedInToday.ts'
 export { getGetAllCheckedOutTodayUrl, getAllCheckedOutToday } from './client/getAllCheckedOutToday.ts'
 export { getGetAllPendingTodayUrl, getAllPendingToday } from './client/getAllPendingToday.ts'
+export { getGetServiceProviderReleaseUrl, getServiceProviderRelease } from './client/getServiceProviderRelease.ts'
 export { getJustifyServiceProviderReleaseUrl, justifyServiceProviderRelease } from './client/justifyServiceProviderRelease.ts'
 export { getListAllUnitsFromMyCondominiumUrl, listAllUnitsFromMyCondominium } from './client/listAllUnitsFromMyCondominium.ts'
 export { getListMyReleasesByPeriodUrl, listMyReleasesByPeriod } from './client/listMyReleasesByPeriod.ts'
 export { getListMyUnitsUrl, listMyUnits } from './client/listMyUnits.ts'
 export { getLoginUrl, login } from './client/login.ts'
+export { getNotifyResident1Url, notifyResident1 } from './client/notifyResident1.ts'
+export { getNotifyResidentUrl, notifyResident } from './client/notifyResident.ts'
+export { getRecordEntry1Url, recordEntry1 } from './client/recordEntry1.ts'
+export { getRecordEntryUrl, recordEntry } from './client/recordEntry.ts'
+export { getRecordExit1Url, recordExit1 } from './client/recordExit1.ts'
+export { getRecordExitUrl, recordExit } from './client/recordExit.ts'
 export { getUpdateDeliveryReleaseUrl, updateDeliveryRelease } from './client/updateDeliveryRelease.ts'
 export { getUpdateDriverReleaseUrl, updateDriverRelease } from './client/updateDriverRelease.ts'
 export { getUpdateFamilyReleaseUrl, updateFamilyRelease } from './client/updateFamilyRelease.ts'
@@ -345,6 +398,8 @@ export { getUpdateServiceProviderReleaseUrl, updateServiceProviderRelease } from
 export { getUpdateUnitUrl, updateUnit } from './client/updateUnit.ts'
 export { getUpdateUserUrl, updateUser } from './client/updateUser.ts'
 export { activateUnitAssociationCodeMutationKey, useActivateUnitAssociationCode } from './hooks/useActivateUnitAssociationCode.ts'
+export { approveLateExit1MutationKey, useApproveLateExit1 } from './hooks/useApproveLateExit1.ts'
+export { approveLateExitMutationKey, useApproveLateExit } from './hooks/useApproveLateExit.ts'
 export { approveServiceProviderReleaseMutationKey, useApproveServiceProviderRelease } from './hooks/useApproveServiceProviderRelease.ts'
 export { cancelReleaseMutationKey, useCancelRelease } from './hooks/useCancelRelease.ts'
 export { checkinReleaseMutationKey, useCheckinRelease } from './hooks/useCheckinRelease.ts'
@@ -407,6 +462,12 @@ export {
   getAllPendingTodaySuspenseQueryOptions,
   useGetAllPendingTodaySuspense,
 } from './hooks/useGetAllPendingTodaySuspense.ts'
+export { getServiceProviderReleaseQueryKey, getServiceProviderReleaseQueryOptions, useGetServiceProviderRelease } from './hooks/useGetServiceProviderRelease.ts'
+export {
+  getServiceProviderReleaseSuspenseQueryKey,
+  getServiceProviderReleaseSuspenseQueryOptions,
+  useGetServiceProviderReleaseSuspense,
+} from './hooks/useGetServiceProviderReleaseSuspense.ts'
 export { justifyServiceProviderReleaseMutationKey, useJustifyServiceProviderRelease } from './hooks/useJustifyServiceProviderRelease.ts'
 export {
   listAllUnitsFromMyCondominiumQueryKey,
@@ -427,6 +488,12 @@ export {
 export { listMyUnitsQueryKey, listMyUnitsQueryOptions, useListMyUnits } from './hooks/useListMyUnits.ts'
 export { listMyUnitsSuspenseQueryKey, listMyUnitsSuspenseQueryOptions, useListMyUnitsSuspense } from './hooks/useListMyUnitsSuspense.ts'
 export { loginMutationKey, useLogin } from './hooks/useLogin.ts'
+export { notifyResident1MutationKey, useNotifyResident1 } from './hooks/useNotifyResident1.ts'
+export { notifyResidentMutationKey, useNotifyResident } from './hooks/useNotifyResident.ts'
+export { recordEntry1MutationKey, useRecordEntry1 } from './hooks/useRecordEntry1.ts'
+export { recordEntryMutationKey, useRecordEntry } from './hooks/useRecordEntry.ts'
+export { recordExit1MutationKey, useRecordExit1 } from './hooks/useRecordExit1.ts'
+export { recordExitMutationKey, useRecordExit } from './hooks/useRecordExit.ts'
 export { updateDeliveryReleaseMutationKey, useUpdateDeliveryRelease } from './hooks/useUpdateDeliveryRelease.ts'
 export { updateDriverReleaseMutationKey, useUpdateDriverRelease } from './hooks/useUpdateDriverRelease.ts'
 export { updateFamilyReleaseMutationKey, useUpdateFamilyRelease } from './hooks/useUpdateFamilyRelease.ts'

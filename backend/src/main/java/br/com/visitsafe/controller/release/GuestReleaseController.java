@@ -30,6 +30,8 @@ public class GuestReleaseController {
             guestRelease.getId(),
             guestRelease.getValidFrom(),
             guestRelease.getValidUntil(),
+            guestRelease.getDailyStart(),
+            guestRelease.getDailyEnd(),
             ReleaseTypeEnum.GUEST
         );
     }
@@ -39,7 +41,14 @@ public class GuestReleaseController {
     public ReleaseResponseDTO updateGuestRelease(@PathVariable UUID id,
                                      @RequestBody GuestReleaseUpdateRequestDTO dto) {
         GuestRelease updatedGuestRelease = updateService.update(id, dto);
-        return new ReleaseResponseDTO(updatedGuestRelease.getId(), updatedGuestRelease.getValidFrom(), updatedGuestRelease.getValidUntil(), ReleaseTypeEnum.GUEST);
+        return new ReleaseResponseDTO(
+            updatedGuestRelease.getId(),
+            updatedGuestRelease.getValidFrom(),
+            updatedGuestRelease.getValidUntil(),
+            updatedGuestRelease.getDailyStart(),
+            updatedGuestRelease.getDailyEnd(),
+            ReleaseTypeEnum.GUEST
+        );
     }
 
     @DeleteMapping("/{id}")

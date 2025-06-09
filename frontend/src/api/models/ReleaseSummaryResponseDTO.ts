@@ -1,7 +1,11 @@
+import type { LocalTime } from './LocalTime.ts'
+
 export const releaseSummaryResponseDTOStatusEnum = {
   PENDING_CHECKIN: 'PENDING_CHECKIN',
-  AUTHORIZED: 'AUTHORIZED',
-  CHECKED_OUT: 'CHECKED_OUT',
+  CHECKED_IN: 'CHECKED_IN',
+  PENDING_RESIDENT_APPROVAL: 'PENDING_RESIDENT_APPROVAL',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
   UNAUTHORIZED: 'UNAUTHORIZED',
 } as const
 
@@ -34,23 +38,21 @@ export type ReleaseSummaryResponseDTO = {
    */
   status: ReleaseSummaryResponseDTOStatusEnum
   /**
-   * @description Horário inicial da validade da liberação
-   * @type string, date-time
+   * @description Data inicial da validade da liberação
+   * @type string, date
    */
   validFrom: string
   /**
-   * @description Horário final da validade da liberação
-   * @type string, date-time
+   * @description Data final da validade da liberação
+   * @type string, date
    */
   validUntil: string
   /**
-   * @description Horário permitido de entrada por dia
-   * @type string, date-time
+   * @type object
    */
-  dailyStart: string
+  dailyStart: LocalTime
   /**
-   * @description Horário permitido de saída por dia
-   * @type string, date-time
+   * @type object
    */
-  dailyEnd: string
+  dailyEnd: LocalTime
 }

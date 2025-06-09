@@ -1,3 +1,5 @@
+import type { ServiceProviderReleaseJustificationDTO } from './ServiceProviderReleaseJustificationDTO'
+
 export type JustifyServiceProviderReleasePathParams = {
   /**
    * @type string, uuid
@@ -10,7 +12,7 @@ export type JustifyServiceProviderReleasePathParams = {
  */
 export type JustifyServiceProviderRelease200 = any
 
-export type JustifyServiceProviderReleaseMutationRequest = string
+export type JustifyServiceProviderReleaseMutationRequest = ServiceProviderReleaseJustificationDTO
 
 export type JustifyServiceProviderReleaseMutationResponse = JustifyServiceProviderRelease200
 

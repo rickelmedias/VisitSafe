@@ -6,8 +6,11 @@ import br.com.visitsafe.model.user.EmployeeUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+
 @Entity
 @Table(name = "releases")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -23,16 +26,16 @@ public abstract class Release {
     private Unit unit;
 
     @Column(nullable = false)
-    private OffsetDateTime validFrom;
+    private LocalDate validFrom;
 
     @Column(nullable = false)
-    private OffsetDateTime validUntil;
+    private LocalDate validUntil;
 
     @Column(nullable = false)
-    private OffsetDateTime dailyStart;
+    private LocalTime dailyStart;
 
     @Column(nullable = false)
-    private OffsetDateTime dailyEnd;
+    private LocalTime dailyEnd;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,7 +53,6 @@ public abstract class Release {
     @ManyToOne
     private EmployeeUser checkoutBy;
 
-
     @Column(updatable = false)
     private OffsetDateTime createdAt;
 
@@ -65,5 +67,19 @@ public abstract class Release {
     @PreUpdate
     public void onUpdate() {
         this.updatedAt = OffsetDateTime.now();
+    }
+
+    public boolean isValidForDate(LocalDate date) {
+        return !date.isBefore(validFrom) && !date.isAfter(validUntil);
+    }
+
+    public boolean isValidForTime(LocalTime time) {
+        return !time.isBefore(dailyStart) && !time.isAfter(dailyEnd);
+    }
+
+    public boolean isValidForDateTime(OffsetDateTime dateTime) {
+        LocalDate date = dateTime.toLocalDate();
+        LocalTime time = dateTime.toLocalTime();
+        return isValidForDate(date) && isValidForTime(time);
     }
 }

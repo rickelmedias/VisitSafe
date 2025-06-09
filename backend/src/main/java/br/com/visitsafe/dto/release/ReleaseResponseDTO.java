@@ -1,6 +1,7 @@
 package br.com.visitsafe.dto.release;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import br.com.visitsafe.model.enums.ReleaseTypeEnum;
@@ -11,9 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReleaseResponseDTO{
+public class ReleaseResponseDTO {
     UUID id;
-    OffsetDateTime validFrom;
-    OffsetDateTime validUntil;
+    LocalDate validFrom;
+    LocalDate validUntil;
+    LocalTime dailyStart;
+    LocalTime dailyEnd;
     ReleaseTypeEnum releaseType;
 }

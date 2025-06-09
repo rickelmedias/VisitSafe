@@ -11,7 +11,8 @@ import br.com.visitsafe.model.visitor.Visitor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -35,17 +36,17 @@ public class ReleaseSummaryResponseDTO {
     @Schema(description = "Status atual da liberação", required = true)
     private ReleaseStatusEnum status;
 
-    @Schema(description = "Horário inicial da validade da liberação", required = true)
-    private OffsetDateTime validFrom;
+    @Schema(description = "Data inicial da validade da liberação", required = true)
+    private LocalDate validFrom;
 
-    @Schema(description = "Horário final da validade da liberação", required = true)
-    private OffsetDateTime validUntil;
+    @Schema(description = "Data final da validade da liberação", required = true)
+    private LocalDate validUntil;
 
     @Schema(description = "Horário permitido de entrada por dia", required = true)
-    private OffsetDateTime dailyStart;
+    private LocalTime dailyStart;
 
     @Schema(description = "Horário permitido de saída por dia", required = true)
-    private OffsetDateTime dailyEnd;
+    private LocalTime dailyEnd;
 
     public static ReleaseSummaryResponseDTO fromEntity(Release release) {
         Visitor visitor = null;
@@ -74,6 +75,4 @@ public class ReleaseSummaryResponseDTO {
                 .dailyEnd(release.getDailyEnd())
                 .build();
     }
-
-    
 }

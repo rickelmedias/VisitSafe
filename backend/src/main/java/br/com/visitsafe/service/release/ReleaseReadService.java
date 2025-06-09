@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -31,27 +32,29 @@ public class ReleaseReadService {
     private final UnitOwnershipValidator unitOwnershipValidator;
 
     public List<ReleaseSummaryResponseDTO> findByOwnerAndPeriod(User user, UUID propertyId, LocalDate startDate, LocalDate endDate) {
-    Unit unit = unitRepository.findById(propertyId)
-            .orElseThrow(() -> new IllegalArgumentException("Unidade não encontrada"));
+        Unit unit = unitRepository.findById(propertyId)
+                .orElseThrow(() -> new IllegalArgumentException("Unidade não encontrada"));
 
-    unitOwnershipValidator.validate(new UnitOwnershipValidator.OwnershipCheck(unit, user));
+        unitOwnershipValidator.validate(new UnitOwnershipValidator.OwnershipCheck(unit, user));
 
-    OffsetDateTime startOfDay = startDate.atStartOfDay().atOffset(OffsetDateTime.now().getOffset());
-    OffsetDateTime endOfDay = endDate.plusDays(1).atStartOfDay().atOffset(OffsetDateTime.now().getOffset());
-
-    return releaseRepository.findAllByUnitIdAndValidFromBetween(unit.getId(), startOfDay, endOfDay)
-            .stream()
-            .map(ReleaseSummaryResponseDTO::fromEntity)
-            .toList();
+        return releaseRepository.findAllByUnitIdAndValidFromBetween(unit.getId(), startDate, endDate)
+                .stream()
+                .map(ReleaseSummaryResponseDTO::fromEntity)
+                .toList();
     }
     
     public Page<ReleaseSummaryResponseDTO> findAllTodayByCondominiumAndStatus(EmployeeUser employee, ReleaseStatusEnum status, Pageable pageable) {
         Condominium condominium = employee.getCondominium();
-        OffsetDateTime todayStart = LocalDate.now().atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime todayEnd = todayStart.plusDays(1);
+        LocalDate today = LocalDate.now();
+        LocalTime startOfDay = LocalTime.MIN;
+        LocalTime endOfDay = LocalTime.MAX;
 
         Page<Release> releases = releaseRepository.findByUnit_CondominiumAndStatusAndCreatedAtBetween(
-                condominium, status, todayStart, todayEnd, pageable
+                condominium, 
+                status, 
+                today.atTime(startOfDay).atOffset(ZoneOffset.UTC),
+                today.atTime(endOfDay).atOffset(ZoneOffset.UTC),
+                pageable
         );
 
         return releases.map(ReleaseSummaryResponseDTO::fromEntity);

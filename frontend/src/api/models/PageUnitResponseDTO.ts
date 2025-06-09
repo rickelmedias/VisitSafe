@@ -32,10 +32,6 @@ export type PageUnitResponseDTO = {
    */
   sort?: SortObject[]
   /**
-   * @type integer | undefined, int32
-   */
-  numberOfElements?: number
-  /**
    * @type boolean | undefined
    */
   first?: boolean
@@ -43,6 +39,10 @@ export type PageUnitResponseDTO = {
    * @type boolean | undefined
    */
   last?: boolean
+  /**
+   * @type integer | undefined, int32
+   */
+  numberOfElements?: number
   /**
    * @type boolean | undefined
    */

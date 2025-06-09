@@ -5,12 +5,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { useGetAllPendingToday } from '@/api/hooks/useGetAllPendingToday'
 import { useGetAllCheckedInToday } from '@/api/hooks/useGetAllCheckedInToday'
 import { useGetAllCanceledToday } from '@/api/hooks/useGetAllCanceledToday'
+import { useGetAllCheckedOutToday } from '@/api/hooks/useGetAllCheckedOutToday'
 import { useCheckinRelease } from '@/api/hooks/useCheckinRelease'
 import { useCheckoutRelease } from '@/api/hooks/useCheckoutRelease'
 import { useCancelRelease } from '@/api/hooks/useCancelRelease'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import LateExitForm from '@/components/late-exit-form'
 
 function ReleaseTable({ releases, actions }: { releases: any[], actions: (release: any) => React.ReactNode }) {
@@ -22,22 +23,30 @@ function ReleaseTable({ releases, actions }: { releases: any[], actions: (releas
           <th className="px-4 py-2 text-left">Visitante</th>
           <th className="px-4 py-2 text-left">Documento</th>
           <th className="px-4 py-2 text-left">Tipo</th>
-          <th className="px-4 py-2 text-left">Entrada</th>
-          <th className="px-4 py-2 text-left">Saída</th>
+          <th className="px-4 py-2 text-left">Data</th>
+          <th className="px-4 py-2 text-left">Horário de Entrada</th>
+          <th className="px-4 py-2 text-left">Horário de Saída</th>
           <th className="px-4 py-2 text-left">Ações</th>
         </tr>
       </thead>
       <tbody>
-        {releases.map((release) => (
-          <tr key={release.id} className="border-b">
-            <td className="px-4 py-2">{release.visitorName}</td>
-            <td className="px-4 py-2">{release.visitorDocument}</td>
-            <td className="px-4 py-2">{release.releaseType}</td>
-            <td className="px-4 py-2">{new Date(release.validFrom).toLocaleString()}</td>
-            <td className="px-4 py-2">{new Date(release.validUntil).toLocaleString()}</td>
-            <td className="px-4 py-2">{actions(release)}</td>
-          </tr>
-        ))}
+        {releases.map((release) => {
+          // Adjust date for timezone
+          const date = new Date(release.validFrom);
+          const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+          
+          return (
+            <tr key={release.id} className="border-b">
+              <td className="px-4 py-2">{release.visitorName}</td>
+              <td className="px-4 py-2">{release.visitorDocument}</td>
+              <td className="px-4 py-2">{release.releaseType}</td>
+              <td className="px-4 py-2">{adjustedDate.toLocaleDateString('pt-BR')}</td>
+              <td className="px-4 py-2">{release.dailyStart}</td>
+              <td className="px-4 py-2">{release.dailyEnd}</td>
+              <td className="px-4 py-2">{actions(release)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   )
@@ -50,6 +59,7 @@ export default function EmployeeReleasesPage() {
   const pending = useGetAllPendingToday()
   const checkedIn = useGetAllCheckedInToday()
   const canceled = useGetAllCanceledToday()
+  const completed = useGetAllCheckedOutToday()
   const checkin = useCheckinRelease({
     mutation: {
       onSuccess: () => {
@@ -107,6 +117,7 @@ export default function EmployeeReleasesPage() {
         <TabsList>
           <TabsTrigger value="pending">Aguardando Check-in</TabsTrigger>
           <TabsTrigger value="checkedin">Aguardando Check-out</TabsTrigger>
+          <TabsTrigger value="completed">Concluídas</TabsTrigger>
           <TabsTrigger value="cancelled">Canceladas</TabsTrigger>
         </TabsList>
         <TabsContent value="pending">
@@ -131,6 +142,12 @@ export default function EmployeeReleasesPage() {
             )}
           />
         </TabsContent>
+        <TabsContent value="completed">
+          <ReleaseTable
+            releases={sortByNearest(completed.data?.content)}
+            actions={() => <span className="text-muted-foreground">-</span>}
+          />
+        </TabsContent>
         <TabsContent value="cancelled">
           <ReleaseTable
             releases={sortByNearest(canceled.data?.content)}
@@ -141,6 +158,9 @@ export default function EmployeeReleasesPage() {
 
       <Dialog open={showLateExitModal} onOpenChange={setShowLateExitModal}>
         <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Justificativa de Saída Tardia</DialogTitle>
+          </DialogHeader>
           {selectedRelease && (
             <LateExitForm
               release={selectedRelease}

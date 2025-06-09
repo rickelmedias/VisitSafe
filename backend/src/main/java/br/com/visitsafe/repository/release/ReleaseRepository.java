@@ -1,5 +1,6 @@
 package br.com.visitsafe.repository.release;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import br.com.visitsafe.model.release.Release;
 
 @Repository
 public interface ReleaseRepository extends JpaRepository<Release, UUID> {
-    List<Release> findAllByUnitIdAndValidFromBetween(UUID unitId, OffsetDateTime start, OffsetDateTime end);
+    List<Release> findAllByUnitIdAndValidFromBetween(UUID unitId, LocalDate start, LocalDate end);
 
     Page<Release> findByUnit_CondominiumAndStatusAndCreatedAtBetween(
         Condominium condominium,

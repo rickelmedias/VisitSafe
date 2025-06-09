@@ -34,6 +34,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -117,10 +119,10 @@ public class VisitsafeApplication {
     private void createReleases(UUID unitId) {
         FamilyReleaseCreateRequestDTO familyRelease = new FamilyReleaseCreateRequestDTO();
         familyRelease.setUnitId(unitId);
-        familyRelease.setValidFrom(OffsetDateTime.now());
-        familyRelease.setValidUntil(OffsetDateTime.now().plusDays(5));
-        familyRelease.setDailyStart(OffsetDateTime.now().withHour(8));
-        familyRelease.setDailyEnd(OffsetDateTime.now().withHour(20));
+        familyRelease.setValidFrom(LocalDate.now());
+        familyRelease.setValidUntil(LocalDate.now().plusDays(5));
+        familyRelease.setDailyStart(LocalTime.of(8, 0));
+        familyRelease.setDailyEnd(LocalTime.of(20, 0));
         FamilyVisitorDTO familyVisitor = new FamilyVisitorDTO("Tio João", "11122233300", "11999998888");
         familyRelease.setVisitor(familyVisitor);
         familyReleaseCreateService.create(familyRelease);
@@ -128,10 +130,10 @@ public class VisitsafeApplication {
 
         GuestReleaseCreateRequestDTO guestRelease = new GuestReleaseCreateRequestDTO();
         guestRelease.setUnitId(unitId);
-        guestRelease.setValidFrom(OffsetDateTime.now());
-        guestRelease.setValidUntil(OffsetDateTime.now().plusDays(2));
-        guestRelease.setDailyStart(OffsetDateTime.now().withHour(10));
-        guestRelease.setDailyEnd(OffsetDateTime.now().withHour(18));
+        guestRelease.setValidFrom(LocalDate.now());
+        guestRelease.setValidUntil(LocalDate.now().plusDays(2));
+        guestRelease.setDailyStart(LocalTime.of(10, 0));
+        guestRelease.setDailyEnd(LocalTime.of(18, 0));
         GuestVisitorDTO guestVisitor = new GuestVisitorDTO("Visitante Carla", "22233344455", "11988887777");
         guestRelease.setVisitor(guestVisitor);
         guestReleaseCreateService.create(guestRelease);
@@ -139,10 +141,10 @@ public class VisitsafeApplication {
 
         ServiceProviderReleaseCreateRequestDTO serviceRelease = new ServiceProviderReleaseCreateRequestDTO();
         serviceRelease.setUnitId(unitId);
-        serviceRelease.setValidFrom(OffsetDateTime.now());
-        serviceRelease.setValidUntil(OffsetDateTime.now().plusDays(7));
-        serviceRelease.setDailyStart(OffsetDateTime.now().withHour(9));
-        serviceRelease.setDailyEnd(OffsetDateTime.now().withHour(17));
+        serviceRelease.setValidFrom(LocalDate.now());
+        serviceRelease.setValidUntil(LocalDate.now().plusDays(7));
+        serviceRelease.setDailyStart(LocalTime.of(9, 0));
+        serviceRelease.setDailyEnd(LocalTime.of(17, 0));
         ServiceProviderVisitorDTO spVisitor = new ServiceProviderVisitorDTO("Técnico João da Net", "55566677788", "11991112222", true);
         serviceRelease.setVisitor(spVisitor);
         serviceProviderReleaseCreateService.create(serviceRelease);
@@ -150,10 +152,10 @@ public class VisitsafeApplication {
 
         DeliveryReleaseCreateRequestDTO deliveryRelease = new DeliveryReleaseCreateRequestDTO();
         deliveryRelease.setUnitId(unitId);
-        deliveryRelease.setValidFrom(OffsetDateTime.now());
-        deliveryRelease.setValidUntil(OffsetDateTime.now().plusDays(1));
-        deliveryRelease.setDailyStart(OffsetDateTime.now().withHour(8));
-        deliveryRelease.setDailyEnd(OffsetDateTime.now().withHour(21));
+        deliveryRelease.setValidFrom(LocalDate.now());
+        deliveryRelease.setValidUntil(LocalDate.now().plusDays(1));
+        deliveryRelease.setDailyStart(LocalTime.of(8, 0));
+        deliveryRelease.setDailyEnd(LocalTime.of(21, 0));
         DeliveryVisitorDTO deliveryVisitor = new DeliveryVisitorDTO("Entregador José", "66677788899", "11991234567", new Vehicle(null, "VW", "UP", "AZUL", "AXY1234"), true);
         deliveryRelease.setVisitor(deliveryVisitor);
         deliveryReleaseCreateService.create(deliveryRelease);
@@ -161,10 +163,10 @@ public class VisitsafeApplication {
 
         DriverReleaseCreateRequestDTO driverRelease = new DriverReleaseCreateRequestDTO();
         driverRelease.setUnitId(unitId);
-        driverRelease.setValidFrom(OffsetDateTime.now().plusDays(30));
-        driverRelease.setValidUntil(OffsetDateTime.now().plusDays(30));
-        driverRelease.setDailyStart(OffsetDateTime.now().withHour(6));
-        driverRelease.setDailyEnd(OffsetDateTime.now().withHour(20));
+        driverRelease.setValidFrom(LocalDate.now().plusDays(30));
+        driverRelease.setValidUntil(LocalDate.now().plusDays(30));
+        driverRelease.setDailyStart(LocalTime.of(6, 0));
+        driverRelease.setDailyEnd(LocalTime.of(20, 0));
         DriverVisitorDTO driverVisitor = new DriverVisitorDTO("Motorista Fernando", "99988877766", "11998765432", new Vehicle(null, "BMW", "320I", "PRETO", "FGV1234"), true);
         driverRelease.setVisitor(driverVisitor);
         driverReleaseCreateService.create(driverRelease);
@@ -172,10 +174,10 @@ public class VisitsafeApplication {
 
         DriverReleaseCreateRequestDTO driverRelease2 = new DriverReleaseCreateRequestDTO();
         driverRelease2.setUnitId(unitId);
-        driverRelease2.setValidFrom(OffsetDateTime.now().plusDays(60));
-        driverRelease2.setValidUntil(OffsetDateTime.now().plusDays(90));
-        driverRelease2.setDailyStart(OffsetDateTime.now().withHour(6));
-        driverRelease2.setDailyEnd(OffsetDateTime.now().withHour(20));
+        driverRelease2.setValidFrom(LocalDate.now().plusDays(60));
+        driverRelease2.setValidUntil(LocalDate.now().plusDays(90));
+        driverRelease2.setDailyStart(LocalTime.of(6, 0));
+        driverRelease2.setDailyEnd(LocalTime.of(20, 0));
         DriverVisitorDTO driverVisitor2 = new DriverVisitorDTO("Motorista Pedro", "99988877766", "11998765432", new Vehicle(null, "BMW", "320I", "PRETO", "FGV1234"), true);
         driverRelease2.setVisitor(driverVisitor2);
         driverReleaseCreateService.create(driverRelease2);

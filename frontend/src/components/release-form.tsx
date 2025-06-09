@@ -23,22 +23,21 @@ import {
   existsByDocumentAndTypeQueryParamsTypeEnum,
   ExistsByDocumentAndTypeQueryParamsTypeEnum,
 } from '@/api/models/ExistsByDocumentAndType'
+import { Label } from '@/components/ui/label'
 
 interface Props {
   propertyId: string
   onSuccess: () => void
 }
 
-// Helper function to convert ISO string to local datetime-local format
-function isoToLocalDateTime(isoString: string): string {
+// Helper function to convert ISO string to local date format
+function isoToLocalDate(isoString: string): string {
   if (!isoString) return ''
   const date = new Date(isoString)
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
+  return `${year}-${month}-${day}`
 }
 
 // Helper function to convert ISO string to local time format
@@ -50,11 +49,35 @@ function isoToLocalTime(isoString: string): string {
   return `${hours}:${minutes}`
 }
 
-// Helper function to convert local datetime to ISO with timezone
-function localDateTimeToIso(localDateTime: string): string {
-  if (!localDateTime) return ''
-  const date = new Date(localDateTime)
-  return date.toISOString()
+// Helper function to convert time string to LocalTime format expected by Spring Boot
+function formatTimeForBackend(timeStr: string): string {
+  if (!timeStr) return ''
+  // Spring Boot expects LocalTime in format "HH:mm:ss" or "HH:mm"
+  return timeStr.length === 5 ? `${timeStr}:00` : timeStr
+}
+
+// Helper function to convert local date to ISO
+function localDateToIso(localDate: string): string {
+  if (!localDate) return ''
+  return new Date(localDate).toISOString()
+}
+
+// Helper function to create LocalTime object from time input
+function createLocalTime(timeStr: string): { hour: number; minute: number; second: number; nano: number } {
+  if (!timeStr) return { hour: 0, minute: 0, second: 0, nano: 0 }
+  const [hours, minutes] = timeStr.split(':').map(Number)
+  return {
+    hour: hours,
+    minute: minutes,
+    second: 0,
+    nano: 0
+  }
+}
+
+// Helper function to create LocalDate string from date input
+function createLocalDate(dateStr: string): string {
+  if (!dateStr) return ''
+  return dateStr
 }
 
 // Helper function to create ISO datetime from date and time
@@ -86,10 +109,10 @@ export default function ReleaseStepForm({ propertyId, onSuccess }: Props) {
   const [vehicleColor, setVehicleColor] = useState('')
   const [vehiclePlate, setVehiclePlate] = useState('')
 
-  const [validFrom, setValidFrom] = useState('')
-  const [validUntil, setValidUntil] = useState('')
-  const [dailyStart, setDailyStart] = useState('')
-  const [dailyEnd, setDailyEnd] = useState('')
+  const [validFrom, setValidFrom] = useState(isoToLocalDate(''))
+  const [validUntil, setValidUntil] = useState(isoToLocalDate(''))
+  const [dailyStart, setDailyStart] = useState(isoToLocalTime(''))
+  const [dailyEnd, setDailyEnd] = useState(isoToLocalTime(''))
 
   /* --------------------------- Mutations --------------------------- */
   const createFamily = useCreateFamilyRelease({ mutation: { onSuccess } })
@@ -144,9 +167,6 @@ export default function ReleaseStepForm({ propertyId, onSuccess }: Props) {
   function handleSubmit() {
     if (!validateReleaseFields()) return
 
-    // Extract the date part from validFrom for daily times
-    const datePart = validFrom.split('T')[0]
-
     const visitor = {
       name,
       document,
@@ -165,14 +185,14 @@ export default function ReleaseStepForm({ propertyId, onSuccess }: Props) {
 
     const payload = {
       unitId: propertyId,
-      validFrom: localDateTimeToIso(validFrom),
-      validUntil: localDateTimeToIso(validUntil),
-      dailyStart: createIsoFromDateAndTime(datePart, dailyStart),
-      dailyEnd: createIsoFromDateAndTime(datePart, dailyEnd),
+      validFrom: validFrom,
+      validUntil: validUntil,
+      dailyStart: formatTimeForBackend(dailyStart),
+      dailyEnd: formatTimeForBackend(dailyEnd),
       visitor,
     }
 
-    // console.log('Payload being sent:', payload) // Debug log
+    console.log('Payload being sent:', payload) // Debug log
 
     switch (releaseType) {
       case existsByDocumentAndTypeQueryParamsTypeEnum.FAMILY:
@@ -283,30 +303,62 @@ export default function ReleaseStepForm({ propertyId, onSuccess }: Props) {
         <>
           <h2 className="text-lg font-semibold">Passo 3: Dados da Liberação</h2>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Início da liberação</label>
-            <Input type="datetime-local" value={validFrom} onChange={(e) => setValidFrom(e.target.value)} />
-
-            <label className="text-sm font-medium">Fim da liberação</label>
-            <Input type="datetime-local" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} />
-
-            <label className="text-sm font-medium">Horário diário de entrada</label>
-            <Input type="time" value={dailyStart} onChange={(e) => setDailyStart(e.target.value)} />
-
-            <label className="text-sm font-medium">Horário diário de saída</label>
-            <Input type="time" value={dailyEnd} onChange={(e) => setDailyEnd(e.target.value)} />
-
-            {releaseType === existsByDocumentAndTypeQueryParamsTypeEnum.SERVICEPROVIDER && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                <h3 className="text-sm font-medium text-yellow-800">Regras para Prestadores de Serviço</h3>
-                <ul className="mt-2 text-sm text-yellow-700 list-disc list-inside space-y-1">
-                  <li>O prestador só poderá entrar no horário permitido</li>
-                  <li>A saída deve ser feita dentro do horário estabelecido</li>
-                  <li>Em caso de necessidade de saída após o horário, será necessário justificativa e aprovação do morador</li>
-                </ul>
-              </div>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="validFrom">Início da liberação</Label>
+              <Input
+                id="validFrom"
+                type="date"
+                value={validFrom}
+                onChange={(e) => setValidFrom(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="validUntil">Fim da liberação</Label>
+              <Input
+                id="validUntil"
+                type="date"
+                value={validUntil}
+                onChange={(e) => setValidUntil(e.target.value)}
+                required
+              />
+            </div>
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="dailyStart">Horário diário de entrada</Label>
+              <Input
+                id="dailyStart"
+                type="time"
+                value={dailyStart}
+                onChange={(e) => setDailyStart(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="dailyEnd">Horário diário de saída</Label>
+              <Input
+                id="dailyEnd"
+                type="time"
+                value={dailyEnd}
+                onChange={(e) => setDailyEnd(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          {releaseType === existsByDocumentAndTypeQueryParamsTypeEnum.SERVICEPROVIDER && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+              <h3 className="text-sm font-medium text-yellow-800">Regras para Prestadores de Serviço</h3>
+              <ul className="mt-2 text-sm text-yellow-700 list-disc list-inside space-y-1">
+                <li>O prestador só poderá entrar no horário permitido</li>
+                <li>A saída deve ser feita dentro do horário estabelecido</li>
+                <li>Em caso de necessidade de saída após o horário, será necessário justificativa e aprovação do morador</li>
+              </ul>
+            </div>
+          )}
 
           <Button className="w-full mt-4" onClick={handleSubmit} disabled={!validateReleaseFields()}>
             Criar Liberação

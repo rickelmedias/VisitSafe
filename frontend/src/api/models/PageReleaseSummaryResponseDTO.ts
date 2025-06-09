@@ -32,10 +32,6 @@ export type PageReleaseSummaryResponseDTO = {
    */
   sort?: SortObject[]
   /**
-   * @type integer | undefined, int32
-   */
-  numberOfElements?: number
-  /**
    * @type boolean | undefined
    */
   first?: boolean
@@ -43,6 +39,10 @@ export type PageReleaseSummaryResponseDTO = {
    * @type boolean | undefined
    */
   last?: boolean
+  /**
+   * @type integer | undefined, int32
+   */
+  numberOfElements?: number
   /**
    * @type boolean | undefined
    */
